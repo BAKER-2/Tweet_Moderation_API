@@ -1,0 +1,18 @@
+
+<!doctype html><html><head><meta charset='utf-8'/>
+<title>Tweet Moderation Demo</title>
+<style>body{font-family:sans-serif;margin:24px;max-width:800px}.pill{display:inline-block;background:#eee;padding:6px 10px;border-radius:999px;margin:3px}</style>
+</head><body><h1>Tweet Moderation Demo</h1>
+<textarea id='txt' rows=5 style='width:100%'></textarea><br>
+<button onclick='go()'>Analyze</button><span id='status'></span>
+<div><b>Foulness meter:</b> <span id='meter'></span>/10</div>
+<div id='tags'></div><pre id='json'></pre>
+<script>
+async function go(){
+ let res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:txt.value})});
+ let js=await res.json();
+ meter.textContent=js.foulness_meter;
+ tags.innerHTML=(js.tags||[]).map(t=>`<span class='pill'>${t}</span>`).join('');
+ json.textContent=JSON.stringify(js,null,2);
+}
+</script></body></html>
